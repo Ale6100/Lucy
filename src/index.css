@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer {
+    * {
+        @apply transition-all duration-700 /* Jamás haría esto, pero lo que quiero hacer en este proyecto en particular lo amerita */
+    }
+}
