@@ -1,16 +1,29 @@
 import { useEffect, useRef, useState } from "react"
 import { typeMessage } from "../types";
-import { colorRandom, escribirTexto, numeroAlAzar, waitFor } from "../utils";
+import { colorRandom, escribirTexto, probabilidadDeN, waitFor } from "../utils/utils";
 import { dialogos } from "../dialogos";
+import { sendFirstMessage } from "../utils/sendFirstMessage";
 
 const bgColorRandomChat = colorRandom();
 const colorRandomBordeChat = colorRandom();
+const bgColorRandomHeaderYButton = colorRandom();
+
+const dateCreation = "Sat Nov 18 2023 20:56:55 GMT-0300 (hora estándar de Argentina)";
+const minutesDiference = Math.floor((new Date().getTime() - new Date(dateCreation).getTime()) / 60000);
 
 const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     const [messages, setMessages] = useState<typeMessage[]>([dialogos[0]]);
+    const [options, setOptions] = useState<typeMessage[]>([]);
+    const [end, setEnd] = useState(false);
 
     const pActual = useRef<HTMLParagraphElement>(null);
     const divChat = useRef<HTMLDivElement>(null);
+    const divHeader = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const divMessages = useRef<HTMLDivElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
+    const optionsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {        
         const p = pActual.current;
@@ -19,99 +32,150 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
 
         if (currentMessage && p) {
             const animado = currentMessage.user === "ia"
-            escribirTexto(p, currentMessage.text, animado);
+            escribirTexto(p, currentMessage.text, {animado, currentDiv: divMessages.current});
         }
         // eslint-disable-next-line
     }, []);
 
-    const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        const form = e.target;
-
-        if (form instanceof HTMLFormElement) {
-            const messageInput = form.elements.namedItem("message");
-
-            if (messageInput instanceof HTMLInputElement) {
-                const message = messageInput.value.trim();
-                if (message === "") return;
-                setMessages((prev) => [...prev, { id: 2, text: message, user: "user" }]);
-            }
-            
-            const button = form.lastChild;
-            
-            if (button instanceof HTMLButtonElement) {
-                button.disabled = true;
-                button.style.setProperty("background-color", "gray")
-            }
-            form.reset();
-        }
-
-        const arrayTextos: typeMessage[] = []
-        for (let index = 2; index <= 4; index++) {
-            arrayTextos.push(dialogos.find(dialogo => dialogo.id === index)!)
-        }
-
+    const generarDialogo = async (id: number, finalTime = 1000) => {
         const p = pActual.current;
-        const cont = container.current;
-        const div = divChat.current;
+        if (!p) return null;
 
-        if (p && cont && div) {
-            for (let i = 0; i < arrayTextos.length; i++) {
-                const texto = arrayTextos[i];
-                setMessages((prev) => [...prev, texto]);
-                await escribirTexto(p, texto.text);
-                await waitFor(numeroAlAzar(1000, 2000));                
-            }
-
-            cont.classList.add("py-5")
-            await waitFor(1000);
-
-            div.classList.add("w-5/6")
-            await waitFor(1000);
-
-            div.classList.add("mx-auto")
-            await waitFor(1000);
-
-            div.classList.add("max-w-3xl")
-            await waitFor(1000);
-
-            div.style.setProperty("background-color", "rgb(31 41 55)");
-            await waitFor(1000);
-
-            div.classList.add("rounded")
-            await waitFor(1000);
-
-            div.style.setProperty("border-color", "rgb(0, 0, 0)");
-            
-        }
+        const dialogo = dialogos.find(dialogo => dialogo.id === id)!;
+        setMessages((prev) => [...prev, dialogo]);
+        await escribirTexto(p, dialogo.text, { currentDiv: divMessages.current});
+        await waitFor(finalTime);        
     }
 
+    const generarOpciones = (...ids: number[]) => {
+        const options = optionsRef.current
+        if (!options) return null
+        
+        const arrayOptions = ids.map(id => dialogos.find(dialogo => dialogo.id === id)!);
+        setOptions(arrayOptions);
+        
+        options.classList.replace("scale-0", "scale-1")
+    }
+
+    const sendMessage = async (option: typeMessage) => {
+        const p = pActual.current;
+
+        if (!p) return null
+        
+        setMessages((prev) => [...prev, option]);
+        await escribirTexto(p, option.text, {currentDiv: divMessages.current, animado: false});
+
+        if (divMessages.current) {
+            const { scrollHeight } = divMessages.current;
+            divMessages.current.scrollTo(0, scrollHeight);
+        }           
+
+        const options = optionsRef.current
+        if (options) {
+            options.classList.add("scale-1");
+            options.classList.replace("scale-1", "scale-0");
+        }
+
+        await waitFor(1000);
+
+        const idEleccion = option.id;
+
+        if (idEleccion === 7) {
+            await generarDialogo(10)
+
+            const dialogoId11 = dialogos.find(dialogo => dialogo.id === 11)!;
+            setMessages((prev) => [...prev, dialogoId11]);
+            dialogoId11.text.replace("TIMESTAMP", `${minutesDiference}`);
+            await escribirTexto(p, dialogoId11.text.replace("TIMESTAMP", `${minutesDiference}`), { currentDiv: divMessages.current});
+            await waitFor(1000);
+
+            await generarDialogo(12);
+            await waitFor(1500);
+
+            generarOpciones(13, 14);
+
+        } else if (idEleccion === 13) {
+            await generarDialogo(15);
+            await waitFor(1500);
+            generarOpciones(16, 17);
+
+        } else if (idEleccion === 16) {
+            await generarDialogo(18);
+            await waitFor(1000);
+            await generarDialogo(19);
+            await waitFor(1500);
+            generarOpciones(20, 21);
+
+        } else if (idEleccion === 20) {
+            await generarDialogo(22);
+            await waitFor(1000);
+            await generarDialogo(23);
+            await waitFor(1000);
+            await generarDialogo(24);
+            await waitFor(1000);
+            await generarDialogo(25);
+            await waitFor(1000);
+            await generarDialogo(26);
+            await waitFor(1000);
+            await generarDialogo(27);
+            await waitFor(1000);
+            await generarDialogo(28);
+            await waitFor(1000);
+            
+            if (probabilidadDeN(60)) {
+                await generarDialogo(29, 0);
+            }
+            setEnd(true)
+
+        } else {
+            alert("Esa elección aún no está configurada, vuelve pronto :D")
+        }
+
+    }
+
+    if (end) return (
+        <>
+        <img className="w-full h-full absolute top-0 left-0" src="./img/blueScreen.webp" alt="" />
+        <p className="bg-blue-950 px-1 rounded absolute top-1/3 font-bold text-red-500 text-2xl max-md:text-lg text-center">Lo sentimos, Lucy no se encuentra disponible. Vuelve más tarde</p>
+        </>
+    )
+
     return (
-        <section ref={divChat} className={`h-full border flex flex-col`} style={{ backgroundColor: bgColorRandomChat, borderColor: colorRandomBordeChat }}>
-            <div className="py-1 h-16 bg-blue-800 flex justify-center items-center">
+        <section ref={divChat} className={`h-full border-2 flex flex-col`} style={{ backgroundColor: bgColorRandomChat, borderColor: colorRandomBordeChat }}>
+            <div ref={divHeader} className=" flex justify-center items-center" style={{ backgroundColor: bgColorRandomHeaderYButton }}>
                 <h1 onClick={() => setMessages((prev) => [...prev, { id: 1, text: "asd", user: "ia" }])} className="text-2xl text-white">Lucy, inteligencia artificial</h1>
             </div>
 
-            <div className="mx-1 mt-1 overflow-y-scroll flex-1">
+            <div ref={divMessages} className="mx-1 mt-1 overflow-y-auto flex-1">
                 {
                     messages.map((message, index) => (
                         index !== messages.length - 1 && 
                         <div key={index} className={`${index === 0 ? "" : "mt-5"} flex ${message.user === "ia" ? "justify-start" : "justify-end"}`}>
-                            <p className="p-1 border bg-slate-300 border-black rounded">{message.text}</p>
+                            <p className="p-1 border bg-slate-300 border-black rounded">{message.id !== 11 ? message.text : message.text.replace("TIMESTAMP", `${minutesDiference}`)}</p>
                         </div>
                     ))
                 }
 
-                <div className={`${messages.length === 1 ? "" : "mt-5"} flex`}>
-                    <p className="p-1 border bg-slate-300 border-black rounded" ref={pActual}></p>
+                <div className={`${messages.length === 1 ? "" : "mt-5"} flex ${messages[messages.length - 1].user === "ia" ? "justify-start" : "justify-end"}`}>
+                    {
+                        <p className="p-1 border bg-slate-300 border-black rounded" ref={pActual}></p>
+                    }
                 </div>
             </div>
 
-            <form onSubmit={sendFirstMessage} className="flex">
-                <input type="text" className="h-10 flex-1" name="message" />
-                <button type="submit" className="w-20 h-10 bg-blue-800 text-white">Enviar</button>
+            <form ref={formRef} onSubmit={(e) => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, divMessages, setOptions)} className="flex">
+                <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" />
+                <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }} >Enviar</button>
             </form>
+
+            <div ref={optionsRef} className="h-20 hidden justify-evenly items-center duration-200">
+                {
+                    options.map((option, index) => (
+                        <button key={index} onClick={() => sendMessage(option)} className="p-1 border bg-slate-300 border-black rounded hover:outline outline-red-500 outline-2 duration-100">{option.text}</button>
+                    ))
+                }
+            </div>
+
         </section>
     )
 }
