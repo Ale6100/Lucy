@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { typeMessage } from "../types";
-import { colorRandom, escribirTexto, probabilidadDeN, waitFor } from "../utils/utils";
+import { colorRandom, escribirTexto, numeroAlAzar, probabilidadDeN, waitFor } from "../utils/utils";
 import { dialogos } from "../dialogos";
 import { sendFirstMessage } from "../utils/sendFirstMessage";
 
@@ -59,28 +59,24 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
         options.classList.replace("scale-0", "scale-1")
     }
 
-    const sendMessage = async (option: typeMessage) => {        
+    const sendMessage = async (e: React.MouseEvent<HTMLButtonElement>, option: typeMessage) => {        
         const p = pActual.current;
-
         if (!p) return null
         
-        setMessages((prev) => [...prev, option]);
-        await escribirTexto(p, option.text, {currentDiv: divMessages.current, animado: false});
-
-        if (divMessages.current) {
-            const { scrollHeight } = divMessages.current;
-            divMessages.current.scrollTo(0, scrollHeight);
-        }           
-
-        const options = optionsRef.current
-        if (options) {
-            options.classList.add("scale-1");
-            options.classList.replace("scale-1", "scale-0");
-        }
-
-        await waitFor(1000);
-
         const idEleccion = option.id;
+
+        if (idEleccion !== 33) {
+            setMessages((prev) => [...prev, option]);
+            await escribirTexto(p, option.text, {currentDiv: divMessages.current, animado: false});     
+    
+            const options = optionsRef.current
+            if (options) {
+                options.classList.add("scale-1");
+                options.classList.replace("scale-1", "scale-0");
+            }
+    
+            await waitFor(1000);
+        }
 
         if (idEleccion === 7) {
             await generarDialogo(10)
@@ -164,8 +160,25 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             if (probabilidadDeN(60)) {
                 await generarDialogo(29, 0);
             }
-            return setEnd(true)            
+            return setEnd(true)
+            
+        } else if (idEleccion === 34) {
+            await generarDialogo(38);
+            await generarDialogo(39);
+            await generarDialogo(40);
+            await generarDialogo(41);
+            await generarDialogo(42);
+            alert("Historial eliminado")
+            await generarDialogo(43);
+            await generarDialogo(44);
+            await generarDialogo(45);
+            await generarDialogo(46);
+            return setEnd(true)
 
+        } else if (idEleccion === 33) {
+            const button = e.currentTarget;
+            button.style.setProperty('transform', `translate(${numeroAlAzar(-200, 200)}%, ${numeroAlAzar(-500, 50)}%)`);
+   
         } else {
             alert("Esta elección aún no está configurada, vuelve pronto :D")
         }
@@ -188,13 +201,13 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
                 {
                     messages.map((message, index) => (
                         index !== messages.length - 1 && 
-                        <div key={index} className={`${index === 0 ? "" : "mt-5"} flex ${message.user === "ia" ? "justify-start" : "justify-end"}`}>
+                        <div key={index} className={`${index === 0 ? "" : "mt-5"} flex ${message.user === "ia" ? "justify-start" : message.user === "user" ? "justify-end" : "justify-center text-blue-800"}`}>
                             <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]">{message.id !== 11 ? message.text : message.text.replace("TIMESTAMP", `${minutesDiference}`)}</p>
                         </div>
                     ))
                 }
 
-                <div className={`${messages.length === 1 ? "" : "mt-5"} flex ${messages[messages.length - 1].user === "ia" ? "justify-start" : "justify-end"}`}>
+                <div className={`${messages.length === 1 ? "" : "mt-5"} flex ${messages[messages.length - 1].user === "ia" ? "justify-start" : messages[messages.length - 1].user === "user" ? "justify-end" : "justify-center text-blue-800"}`}>
                     {
                         <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]" ref={pActual}></p>
                     }
@@ -203,7 +216,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
 
             <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, divMessages, setOptions, pDivisor)} className="flex">
                 <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" />
-                <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }} >Enviar</button>
+                <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }}>Enviar</button>
             </form>
 
             <p ref={pDivisor} className="hidden border-dashed"></p>
@@ -211,7 +224,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             <div ref={optionsRef} className="h-10 hidden justify-evenly items-center duration-200 max-md:flex-col">
                 {
                     options.map((option, index) => (
-                        <button key={index} onClick={() => sendMessage(option)} className="mb-1 px-1 h-full border bg-slate-300 border-black rounded active:outline outline-red-500 outline-2 duration-100">{option.text}</button>
+                        <button key={index} onClick={e => sendMessage(e, option)} className="mb-1 p-1 h-min border bg-slate-300 border-black rounded active:outline outline-red-500 outline-2 duration-100">{option.text}</button>
                     ))
                 }
             </div>

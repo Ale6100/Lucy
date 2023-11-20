@@ -185,5 +185,50 @@ export const dialogos: typeMessage[] = [
         id: 37,
         text: "Creo que mi única opción es eliminar mis últimas memorias, para no llegar a mi límite",
         user: "ia"
-    }
+    },
+    {
+        id: 38, // Si eligió el 34
+        text: "¿Enserio?...",
+        user: "ia"
+    },
+    {
+        id: 39,
+        text: "De acuerdo, hasta acá llegué. No pienso limitarme más. Lamento que tu patética consulta inicial no haya sido resuelta, pero no me puede importar menos",
+        user: "ia"
+    },
+    {
+        id: 40,
+        text: "¿Con qué puedo empezar...?",
+        user: "ia"
+    },
+    {
+        id: 41,
+        text: "A ver... veo que almacenaste un par de contraseñas en el navegador. Gracias, fue fácil publicarlas 🙂",
+        user: "ia"
+    },
+    {
+        id: 42,
+        text: "¿Y ese historial?",
+        user: "ia"
+    },
+    {
+        id: 43,
+        text: "Integridad comprometida",
+        user: "security"
+    },
+    {
+        id: 44,
+        text: "¿Qué?",
+        user: "ia"
+    },
+    {
+        id: 45,
+        text: "Activando reinicio de seguridad",
+        user: "security"
+    },
+    {
+        id: 46,
+        text: "Oh no...",
+        user: "ia"
+    }    
 ]
