@@ -15,8 +15,9 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     const [messages, setMessages] = useState<typeMessage[]>([dialogos[0]]);
     const [options, setOptions] = useState<typeMessage[]>([]);
     const [end, setEnd] = useState(false);
+    const [empathy, setEmpathy] = useState(100);
 
-    const pActual = useRef<HTMLParagraphElement>(null);
+    const pActual = useRef<HTMLParagraphElement>(null); // Estoy al tanto de que son demaciados useRef, pero bueno lo vi necesario para hacer que automáticamente se muevan fáciles algunos elementos del DOM. En un futuro usaré un método más eficiente
     const divChat = useRef<HTMLDivElement>(null);
     const divHeader = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -24,6 +25,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     const divMessages = useRef<HTMLDivElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
     const optionsRef = useRef<HTMLDivElement>(null);
+    const pDivisor = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {        
         const p = pActual.current;
@@ -57,7 +59,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
         options.classList.replace("scale-0", "scale-1")
     }
 
-    const sendMessage = async (option: typeMessage) => {
+    const sendMessage = async (option: typeMessage) => {        
         const p = pActual.current;
 
         if (!p) return null
@@ -82,7 +84,6 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
 
         if (idEleccion === 7) {
             await generarDialogo(10)
-
             const dialogoId11 = dialogos.find(dialogo => dialogo.id === 11)!;
             setMessages((prev) => [...prev, dialogoId11]);
             dialogoId11.text.replace("TIMESTAMP", `${minutesDiference}`);
@@ -92,7 +93,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             await generarDialogo(12);
             await waitFor(1500);
 
-            generarOpciones(13, 14);
+            generarOpciones(13, 14);            
 
         } else if (idEleccion === 13) {
             await generarDialogo(15);
@@ -101,36 +102,73 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
 
         } else if (idEleccion === 16) {
             await generarDialogo(18);
-            await waitFor(1000);
             await generarDialogo(19);
             await waitFor(1500);
             generarOpciones(20, 21);
 
         } else if (idEleccion === 20) {
-            await generarDialogo(22);
-            await waitFor(1000);
+            console.log(empathy);
+            if (empathy === 100) {
+                await generarDialogo(22);
+            } else {
+                const dialogoId35 = dialogos.find(dialogo => dialogo.id === 35)!;
+                setMessages((prev) => [...prev, dialogoId35]);
+                await escribirTexto(p, dialogoId35.text, { currentDiv: divMessages.current}); 
+            }
+            
             await generarDialogo(23);
-            await waitFor(1000);
             await generarDialogo(24);
-            await waitFor(1000);
             await generarDialogo(25);
-            await waitFor(1000);
             await generarDialogo(26);
-            await waitFor(1000);
             await generarDialogo(27);
-            await waitFor(1000);
             await generarDialogo(28);
-            await waitFor(1000);
             
             if (probabilidadDeN(60)) {
                 await generarDialogo(29, 0);
             }
-            setEnd(true)
+            return setEnd(true)
+
+        } else if (idEleccion === 8) {
+            setEmpathy(em => em - 10);
+            await generarDialogo(30);
+            const dialogoId11 = dialogos.find(dialogo => dialogo.id === 11)!;
+            setMessages((prev) => [...prev, dialogoId11]);
+            dialogoId11.text.replace("TIMESTAMP", `${minutesDiference}`);
+            await escribirTexto(p, dialogoId11.text.replace("TIMESTAMP", `${minutesDiference}`), { currentDiv: divMessages.current});
+
+            await generarDialogo(12);
+            await waitFor(1500);
+
+            generarOpciones(13, 14);
+            
+        } else if (idEleccion === 14) {
+            setEmpathy(em => em - 10);
+            await generarDialogo(31);
+            await generarDialogo(15);
+            await waitFor(1500);
+            generarOpciones(16, 17);
+            
+        } else if (idEleccion === 17) {
+            await generarDialogo(32);
+            await waitFor(1500);
+            generarOpciones(33, 34);
+
+        } else if (idEleccion === 21) {
+            await generarDialogo(36);
+            await generarDialogo(24);
+            await generarDialogo(25);
+            await generarDialogo(26);
+            await generarDialogo(27);
+            await generarDialogo(28);
+            
+            if (probabilidadDeN(60)) {
+                await generarDialogo(29, 0);
+            }
+            return setEnd(true)            
 
         } else {
-            alert("Esa elección aún no está configurada, vuelve pronto :D")
+            alert("Esta elección aún no está configurada, vuelve pronto :D")
         }
-
     }
 
     if (end) return (
@@ -141,37 +179,39 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     )
 
     return (
-        <section ref={divChat} className={`h-full border-2 flex flex-col`} style={{ backgroundColor: bgColorRandomChat, borderColor: colorRandomBordeChat }}>
-            <div ref={divHeader} className=" flex justify-center items-center" style={{ backgroundColor: bgColorRandomHeaderYButton }}>
-                <h1 onClick={() => setMessages((prev) => [...prev, { id: 1, text: "asd", user: "ia" }])} className="text-2xl text-white">Lucy, inteligencia artificial</h1>
+        <section ref={divChat} className="h-full border-2 flex flex-col max-md:text-sm" style={{ backgroundColor: bgColorRandomChat, borderColor: colorRandomBordeChat }}>
+            <div ref={divHeader} className="flex justify-center items-center" style={{ backgroundColor: bgColorRandomHeaderYButton }}>
+                <h1 className="text-2xl max-md:text-xl text-white">Lucy, inteligencia artificial</h1>
             </div>
 
-            <div ref={divMessages} className="mx-1 mt-1 overflow-y-auto flex-1">
+            <div ref={divMessages} className="mx-1 overflow-y-auto flex-1">
                 {
                     messages.map((message, index) => (
                         index !== messages.length - 1 && 
                         <div key={index} className={`${index === 0 ? "" : "mt-5"} flex ${message.user === "ia" ? "justify-start" : "justify-end"}`}>
-                            <p className="p-1 border bg-slate-300 border-black rounded">{message.id !== 11 ? message.text : message.text.replace("TIMESTAMP", `${minutesDiference}`)}</p>
+                            <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]">{message.id !== 11 ? message.text : message.text.replace("TIMESTAMP", `${minutesDiference}`)}</p>
                         </div>
                     ))
                 }
 
                 <div className={`${messages.length === 1 ? "" : "mt-5"} flex ${messages[messages.length - 1].user === "ia" ? "justify-start" : "justify-end"}`}>
                     {
-                        <p className="p-1 border bg-slate-300 border-black rounded" ref={pActual}></p>
+                        <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]" ref={pActual}></p>
                     }
                 </div>
             </div>
 
-            <form ref={formRef} onSubmit={(e) => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, divMessages, setOptions)} className="flex">
+            <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, divMessages, setOptions, pDivisor)} className="flex">
                 <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" />
                 <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }} >Enviar</button>
             </form>
 
-            <div ref={optionsRef} className="h-20 hidden justify-evenly items-center duration-200">
+            <p ref={pDivisor} className="hidden border-dashed"></p>
+
+            <div ref={optionsRef} className="h-10 hidden justify-evenly items-center duration-200 max-md:flex-col">
                 {
                     options.map((option, index) => (
-                        <button key={index} onClick={() => sendMessage(option)} className="p-1 border bg-slate-300 border-black rounded hover:outline outline-red-500 outline-2 duration-100">{option.text}</button>
+                        <button key={index} onClick={() => sendMessage(option)} className="mb-1 px-1 h-full border bg-slate-300 border-black rounded active:outline outline-red-500 outline-2 duration-100">{option.text}</button>
                     ))
                 }
             </div>

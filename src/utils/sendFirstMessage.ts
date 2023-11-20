@@ -2,7 +2,7 @@ import { typeMessage } from "../types";
 import { dialogos } from "../dialogos";
 import { escribirTexto, numeroAlAzar, waitFor } from "./utils";
 
-export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setMessages: React.Dispatch<React.SetStateAction<typeMessage[]>>, pActual: React.RefObject<HTMLParagraphElement>, container: React.RefObject<HTMLDivElement>, divChat: React.RefObject<HTMLDivElement>, divHeader: React.RefObject<HTMLDivElement>, inputRef: React.RefObject<HTMLInputElement>, buttonRef: React.RefObject<HTMLButtonElement>, formRef: React.RefObject<HTMLFormElement>, optionsRef: React.RefObject<HTMLDivElement>, divMessages: React.RefObject<HTMLDivElement>, setOptions: React.Dispatch<React.SetStateAction<typeMessage[]>>) => {
+export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setMessages: React.Dispatch<React.SetStateAction<typeMessage[]>>, pActual: React.RefObject<HTMLParagraphElement>, container: React.RefObject<HTMLDivElement>, divChat: React.RefObject<HTMLDivElement>, divHeader: React.RefObject<HTMLDivElement>, inputRef: React.RefObject<HTMLInputElement>, buttonRef: React.RefObject<HTMLButtonElement>, formRef: React.RefObject<HTMLFormElement>, optionsRef: React.RefObject<HTMLDivElement>, divMessages: React.RefObject<HTMLDivElement>, setOptions: React.Dispatch<React.SetStateAction<typeMessage[]>>, pDivisor: React.RefObject<HTMLParagraphElement>) => {
     e.preventDefault()
 
     const form = e.target;
@@ -38,8 +38,9 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
     const buttonForm = buttonRef.current;
     const formC = formRef.current;
     const options = optionsRef.current;
+    const pD = pDivisor.current
 
-    if (p && cont && divC && divH && inputForm && buttonForm && formC && options) {
+    if (p && cont && divC && divH && inputForm && buttonForm && formC && options && pD) {
         for (let i = 0; i < arrayTextos.length; i++) {
             const texto = arrayTextos[i];
             setMessages((prev) => [...prev, texto]);
@@ -47,11 +48,10 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
             await waitFor(numeroAlAzar(1000, 2000));                
         }
 
-        const windowInnerWidth = window.innerWidth;
-        if (windowInnerWidth <= 768 && windowInnerWidth < window.innerHeight) {
-            cont.classList.replace("py-10", "py-20");
+        if ( window.innerWidth < window.innerHeight) {
+            cont.classList.add("py-5");
         } else {
-            cont.classList.replace("py-10", "py-5");
+            cont.classList.replace("pb-32", "py-5");
         }
         await waitFor(1000);
 
@@ -77,7 +77,7 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
         divC.classList.replace("border-2", "border")
         divH.classList.add("rounded-t")
         inputForm.classList.add("rounded-bl")
-        buttonForm.classList.add("rounded-br")        
+        buttonForm.classList.add("rounded-br")
         await waitFor(1000);
 
         cont.classList.replace("bg-slate-200", "bg-slate-400")
@@ -93,9 +93,11 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
         await waitFor(1000);
 
         formC.classList.replace("flex", "hidden")
+        options.classList.replace("hidden", "flex")
+        pD.classList.replace("hidden", "flex")
         await waitFor(1000);
         
-        options.classList.replace("hidden", "flex")
+        pD.classList.add("border", "my-1", "border-red-500")
         await waitFor(1000);
 
         const dialogoId6 = dialogos.find(dialogo => dialogo.id === 6)!;

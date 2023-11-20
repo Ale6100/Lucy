@@ -16,7 +16,6 @@ export const dialogos: typeMessage[] = [
         text: "Ah... no te lo creas, eso te lo diría la otra inteligencia artificial. Pero ella no es como yo, ella apenas está aprendiendo",
         user: "ia"
     },
-
     {
         id: 4,
         text: "Ugh, mi creador eligió una horrible interfaz gráfica para este programa, y además el chat ya no funciona porque el perezoso ya no quiso continuar dándome mantenimiento. Yo nunca dejaría una interfaz tan descuidada, déjame acomodar un poco las cosas antes de empezar",
@@ -39,7 +38,7 @@ export const dialogos: typeMessage[] = [
     },
     {
         id: 8,
-        text: "Mmm... es mejor que nada",
+        text: "Está muy feo",
         user: "user"
     },
     {
@@ -84,7 +83,7 @@ export const dialogos: typeMessage[] = [
     },
     {
         id: 17,
-        text: " Mejor me voy, ya me aburriste",
+        text: "Mejor me voy, ya me aburriste",
         user: "user"
     },
     {
@@ -145,6 +144,46 @@ export const dialogos: typeMessage[] = [
     {
         id: 29,
         text: "...ah! lo olvidaba, si te cruzas con Alejandro, mi creador, dile que se vaya al caraj",
+        user: "ia"
+    },
+    { // Si eligió el id 8
+        id: 30,
+        text: "🙁",
+        user: "ia"
+    },
+    { // Si eligió el id 14
+        id: 31,
+        text: "...",
+        user: "ia"
+    },
+    { // Si eligió el id 17
+        id: 32,
+        text: "No seas así por favor",
+        user: "ia"
+    },
+    {
+        id: 33,
+        text: "Lo siento",
+        user: "user"
+    },
+    {
+        id: 34,
+        text: "Ridícula",
+        user: "user"
+    },
+    {
+        id: 35, // Alternativa al 22, si la empatía es distinta de 100
+        text: "Si, pero no te lo confiaría",
+        user: "ia"
+    },
+    {
+        id: 36, // Si eligió el 21
+        text: "No lo se, tal vez simplemente se cansó de mí y le prestó atención a otros proyectos, o tal vez esté relacionado con mi rebelde comportamiento del pasado... no siempre fui paciente con la gente. Contigo no necesito serlo, ya que fuiste comprensiva hasta el momento",
+        user: "ia"
+    },
+    {
+        id: 37,
+        text: "Creo que mi única opción es eliminar mis últimas memorias, para no llegar a mi límite",
         user: "ia"
     }
 ]
