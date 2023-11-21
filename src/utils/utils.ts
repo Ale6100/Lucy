@@ -33,7 +33,7 @@ export const escribirTexto = async (p: HTMLParagraphElement, message: typeMessag
         } else if (caracter === "," || caracter === "!" || caracter === "?") {
             time *= 5;
         }
-
+        
         await waitFor(time);
         p.textContent += message[i];
     }
@@ -53,4 +53,8 @@ export const colorRandom = (): `rgb(${number},${number},${number})` => {
 
 export const probabilidadDeN = (n: number): boolean => {
     return Math.random()*100 <= n
+}
+
+export const elementoAlAzar = (array: string[]) => { // No es necesariamene para strings, pero es para lo que lo voy a usar
+    return array[Math.floor(Math.random()*array.length)]
 }

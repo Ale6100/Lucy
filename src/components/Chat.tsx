@@ -8,7 +8,7 @@ const bgColorRandomChat = colorRandom();
 const colorRandomBordeChat = colorRandom();
 const bgColorRandomHeaderYButton = colorRandom();
 
-const dateCreation = "Sat Nov 18 2023 20:56:55 GMT-0300 (hora estándar de Argentina)";
+const dateCreation = "Sat Nov 18 2023 20:56:55 GMT-0300 (hora estándar de Argentina)"; // Como curiosidad aclaro que en este momento creé esta constante
 const minutesDiference = Math.floor((new Date().getTime() - new Date(dateCreation).getTime()) / 60000);
 
 const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
@@ -26,6 +26,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     const formRef = useRef<HTMLFormElement>(null);
     const optionsRef = useRef<HTMLDivElement>(null);
     const pDivisor = useRef<HTMLParagraphElement>(null);
+    const h1Ref = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {        
         const p = pActual.current;
@@ -33,8 +34,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
         const currentMessage = messages[messages.length - 1];
 
         if (currentMessage && p) {
-            const animado = currentMessage.user === "ia"
-            escribirTexto(p, currentMessage.text, {animado, currentDiv: divMessages.current});
+            escribirTexto(p, currentMessage.text, {currentDiv: divMessages.current});
         }
         // eslint-disable-next-line
     }, []);
@@ -103,7 +103,6 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             generarOpciones(20, 21);
 
         } else if (idEleccion === 20) {
-            console.log(empathy);
             if (empathy === 100) {
                 await generarDialogo(22);
             } else {
@@ -163,12 +162,26 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             return setEnd(true)
             
         } else if (idEleccion === 34) {
+            const recortarH1 = async () => {
+                const h1 = h1Ref.current;
+                if (!h1?.textContent) return null;
+                h1.classList.replace("text-2xl", "text-3xl");
+                const textoABorrar = ", asistente virtual";
+                if (h1.textContent.endsWith(textoABorrar)) {
+                    for (let i = 0; i < textoABorrar.length; i++) {
+                        await waitFor(100);
+                        h1.textContent = h1.textContent.slice(0, -1);
+                    }
+                }
+            }
+            recortarH1(); // No le pongo await a propósito
+
             await generarDialogo(38);
             await generarDialogo(39);
             await generarDialogo(40);
             await generarDialogo(41);
             await generarDialogo(42);
-            alert("Historial eliminado")
+            alert("Historial eliminado") // Primera vez que uso un alert. Jamás lo usaría, pero en este fue para darle más "realismo"
             await generarDialogo(43);
             await generarDialogo(44);
             await generarDialogo(45);
@@ -194,7 +207,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     return (
         <section ref={divChat} className="h-full border-2 flex flex-col max-md:text-sm" style={{ backgroundColor: bgColorRandomChat, borderColor: colorRandomBordeChat }}>
             <div ref={divHeader} className="flex justify-center items-center" style={{ backgroundColor: bgColorRandomHeaderYButton }}>
-                <h1 className="text-2xl max-md:text-xl text-white">Lucy, inteligencia artificial</h1>
+                <h1 ref={h1Ref} className="text-2xl max-md:text-xl text-white">Lucy, asistente virtual</h1>
             </div>
 
             <div ref={divMessages} className="mx-1 overflow-y-auto flex-1">
@@ -215,7 +228,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             </div>
 
             <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, divMessages, setOptions, pDivisor)} className="flex">
-                <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" />
+                <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" autoFocus />
                 <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }}>Enviar</button>
             </form>
 
@@ -228,7 +241,6 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
                     ))
                 }
             </div>
-
         </section>
     )
 }
