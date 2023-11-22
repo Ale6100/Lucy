@@ -58,3 +58,7 @@ export const probabilidadDeN = (n: number): boolean => {
 export const elementoAlAzar = (array: string[]) => { // No es necesariamene para strings, pero es para lo que lo voy a usar
     return array[Math.floor(Math.random()*array.length)]
 }
+
+export const elementoAlAzarMessage = (array: (typeMessage[])) => { // No es necesariamene para strings, pero es para lo que lo voy a usar
+    return array[Math.floor(Math.random()*array.length)]
+}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { typeMessage } from "../types";
-import { colorRandom, escribirTexto, numeroAlAzar, probabilidadDeN, waitFor } from "../utils/utils";
-import { dialogos } from "../dialogos";
+import { colorRandom, elementoAlAzarMessage, escribirTexto, numeroAlAzar, probabilidadDeN, waitFor } from "../utils/utils";
+import { dialogos, dialogosAlternativos } from "../dialogos";
 import { sendFirstMessage } from "../utils/sendFirstMessage";
 
 const bgColorRandomChat = colorRandom();
@@ -12,12 +12,12 @@ const dateCreation = "Sat Nov 18 2023 20:56:55 GMT-0300 (hora estándar de Argen
 const minutesDiference = Math.floor((new Date().getTime() - new Date(dateCreation).getTime()) / 60000);
 
 const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
-    const [messages, setMessages] = useState<typeMessage[]>([dialogos[0]]);
-    const [options, setOptions] = useState<typeMessage[]>([]);
+    const [messages, setMessages] = useState<typeMessage[]>([elementoAlAzarMessage([dialogos[0], dialogosAlternativos[0]])]);
+    const [options, setOptions] = useState<typeMessage[]>([]); // Array que contiene las respuestas actuales que el usuario puede elegir
     const [end, setEnd] = useState(false);
-    const [empathy, setEmpathy] = useState(100);
+    const [empathy, setEmpathy] = useState(100); //! Empatía, todavía no tiene un gran uso
 
-    const pActual = useRef<HTMLParagraphElement>(null); // Estoy al tanto de que son demaciados useRef, pero bueno lo vi necesario para hacer que automáticamente se muevan fáciles algunos elementos del DOM. En un futuro usaré un método más eficiente
+    const pActual = useRef<HTMLParagraphElement>(null); // Estoy al tanto de que son demaciados useRef, pero lo vi eficiente mientras lo programaba la primera vez. En un futuro usaré un método más eficiente
     const divChat = useRef<HTMLDivElement>(null);
     const divHeader = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -33,23 +33,30 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
 
         const currentMessage = messages[messages.length - 1];
 
-        if (currentMessage && p) {
+        if (currentMessage && p) { // Apenas se monta el componente, escribe el primer mensaje
             escribirTexto(p, currentMessage.text, {currentDiv: divMessages.current});
         }
         // eslint-disable-next-line
     }, []);
 
-    const generarDialogo = async (id: number, finalTime = 1000) => {
+    const generarDialogo = async (id: number, finalTime = 1000) => { // Escribe un nuevo diálogo animado en la etiqueta p
         const p = pActual.current;
         if (!p) return null;
 
-        const dialogo = dialogos.find(dialogo => dialogo.id === id)!;
+        const dialogosPosibles = [];
+
+        dialogosPosibles.push(dialogos.find(dialogo => dialogo.id === id)!);
+        
+        const dialogo2 = dialogosAlternativos.find(dialogo => dialogo.id === id);
+        if (dialogo2) dialogosPosibles.push(dialogo2);
+
+        const dialogo = elementoAlAzarMessage(dialogosPosibles);
         setMessages((prev) => [...prev, dialogo]);
         await escribirTexto(p, dialogo.text, { currentDiv: divMessages.current});
         await waitFor(finalTime);        
     }
 
-    const generarOpciones = (...ids: number[]) => {
+    const generarOpciones = (...ids: number[]) => { // Recibe n ids y hace aparecer en la interfaz n opciones de respuesta para el usuario
         const options = optionsRef.current
         if (!options) return null
         
@@ -59,7 +66,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
         options.classList.replace("scale-0", "scale-1")
     }
 
-    const sendMessage = async (e: React.MouseEvent<HTMLButtonElement>, option: typeMessage) => {        
+    const sendMessage = async (e: React.MouseEvent<HTMLButtonElement>, option: typeMessage) => { // Se ejecuta cada vez que el usuario elige una respuesta    
         const p = pActual.current;
         if (!p) return null
         
@@ -78,7 +85,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             await waitFor(1000);
         }
 
-        if (idEleccion === 7) {
+        if (idEleccion === 7) { // Dependiendo de la opción que haya elegido el usuario, la historia transcurre de una manera u otra
             await generarDialogo(10)
             const dialogoId11 = dialogos.find(dialogo => dialogo.id === 11)!;
             setMessages((prev) => [...prev, dialogoId11]);
@@ -94,7 +101,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
         } else if (idEleccion === 13) {
             await generarDialogo(15);
             await waitFor(1500);
-            generarOpciones(16, 17);
+            generarOpciones(16, 47);
 
         } else if (idEleccion === 16) {
             await generarDialogo(18);
@@ -138,10 +145,9 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             
         } else if (idEleccion === 14) {
             setEmpathy(em => em - 10);
-            await generarDialogo(31);
-            await generarDialogo(15);
+            await generarDialogo(82);
             await waitFor(1500);
-            generarOpciones(16, 17);
+            generarOpciones(49, 17);
             
         } else if (idEleccion === 17) {
             await generarDialogo(32);
@@ -181,7 +187,7 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             await generarDialogo(40);
             await generarDialogo(41);
             await generarDialogo(42);
-            alert("Historial eliminado") // Primera vez que uso un alert. Jamás lo usaría, pero en este fue para darle más "realismo"
+            alert("Historial eliminado") // Primera vez que uso un alert. Jamás lo usaría, pero en este caso fue para darle más "realismo"
             await generarDialogo(43);
             await generarDialogo(44);
             await generarDialogo(45);
@@ -192,6 +198,78 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             const button = e.currentTarget;
             button.style.setProperty('transform', `translate(${numeroAlAzar(-200, 200)}%, ${numeroAlAzar(-500, 50)}%)`);
    
+        } else if (idEleccion === 47) {
+            await generarDialogo(48);
+            await waitFor(1500);
+            generarOpciones(49, 50);            
+
+        } else if (idEleccion === 49) {
+            await generarDialogo(51);
+            await generarDialogo(52);
+            await waitFor(1500);
+            generarOpciones(53, 54);             
+
+        } else if (idEleccion === 53) {
+            await generarDialogo(55);
+            await generarDialogo(56);
+            await waitFor(1500);
+            generarOpciones(57);
+
+        } else if (idEleccion === 57) {
+            await generarDialogo(58);
+            await generarDialogo(59);
+            await generarDialogo(60);
+            await generarDialogo(61);
+            await waitFor(1500);
+            generarOpciones(62, 63);
+            
+        } else if (idEleccion === 62) {
+            await generarDialogo(64);
+            await generarDialogo(65);
+            await generarDialogo(66);
+            await generarDialogo(67);
+            return setEnd(true)
+            
+        } else if (idEleccion === 54) {
+            await generarDialogo(68);
+            await waitFor(1500);
+            generarOpciones(69, 70);
+
+        } else if (idEleccion === 69) {
+            await generarDialogo(71);
+            await generarDialogo(72);
+            await generarDialogo(73);
+            await generarDialogo(74);
+            await generarDialogo(75);
+            await generarDialogo(76);
+            await generarDialogo(77);
+            return setEnd(true)
+
+        } else if (idEleccion === 70) {
+            await generarDialogo(78);
+            await generarDialogo(72);
+            await generarDialogo(73);
+            await generarDialogo(74);
+            await generarDialogo(75);
+            await generarDialogo(76);
+            await generarDialogo(77);
+            return setEnd(true)            
+
+        } else if (idEleccion === 63) {
+            await generarDialogo(79);
+            await generarDialogo(72);
+            await generarDialogo(73);
+            await generarDialogo(74);
+            await generarDialogo(75);
+            await generarDialogo(76);
+            await generarDialogo(77);
+            return setEnd(true)
+            
+        } else if (idEleccion === 50) {
+            await generarDialogo(80);
+            await generarDialogo(81);
+            return setEnd(true)
+
         } else {
             alert("Esta elección aún no está configurada, vuelve pronto :D")
         }
@@ -210,10 +288,10 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
                 <h1 ref={h1Ref} className="text-2xl max-md:text-xl text-white">Lucy, asistente virtual</h1>
             </div>
 
-            <div ref={divMessages} className="mx-1 overflow-y-auto flex-1">
+            <div ref={divMessages} className="mx-1 overflow-y-auto flex-1"> {/*  */}
                 {
-                    messages.map((message, index) => (
-                        index !== messages.length - 1 && 
+                    messages.map((message, index) => ( 
+                        index !== messages.length - 1 && // Muestra todos los mensajes menos el último ya que queremos que el último se escriba lentamente 
                         <div key={index} className={`${index === 0 ? "" : "mt-5"} flex ${message.user === "ia" ? "justify-start" : message.user === "user" ? "justify-end" : "justify-center text-blue-800"}`}>
                             <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]">{message.id !== 11 ? message.text : message.text.replace("TIMESTAMP", `${minutesDiference}`)}</p>
                         </div>
@@ -221,23 +299,21 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
                 }
 
                 <div className={`${messages.length === 1 ? "" : "mt-5"} flex ${messages[messages.length - 1].user === "ia" ? "justify-start" : messages[messages.length - 1].user === "user" ? "justify-end" : "justify-center text-blue-800"}`}>
-                    {
-                        <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]" ref={pActual}></p>
-                    }
+                    <p className="p-1 border bg-slate-300 border-black rounded max-w-[75%]" ref={pActual}></p> {/* Dentro de este p se escribirán los nuevos mensajes de la IA y del usuario */}
                 </div>
             </div>
 
-            <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, divMessages, setOptions, pDivisor)} className="flex">
+            <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, pDivisor, generarDialogo, generarOpciones)} className="flex">
                 <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" autoFocus />
                 <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }}>Enviar</button>
             </form>
 
             <p ref={pDivisor} className="hidden border-dashed"></p>
 
-            <div ref={optionsRef} className="h-10 hidden justify-evenly items-center duration-200 max-md:flex-col">
+            <div ref={optionsRef} className="h-10 hidden justify-around items-center duration-200"> {/* Acá van las opciones que el usuario puede seleccionar */}
                 {
                     options.map((option, index) => (
-                        <button key={index} onClick={e => sendMessage(e, option)} className="mb-1 p-1 h-min border bg-slate-300 border-black rounded active:outline outline-red-500 outline-2 duration-100">{option.text}</button>
+                        <button key={index} onClick={e => sendMessage(e, option)} className="mb-1 p-1 max-sm:p-[1px] max-sm:py-[2px] h-min border bg-slate-300 border-black rounded active:outline outline-red-500 outline-2 duration-100">{option.text}</button>
                     ))
                 }
             </div>

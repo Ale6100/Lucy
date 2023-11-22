@@ -1,8 +1,7 @@
 import { typeMessage } from "../types";
-import { dialogos } from "../dialogos";
-import { escribirTexto, numeroAlAzar, waitFor } from "./utils";
+import { waitFor } from "./utils";
 
-export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setMessages: React.Dispatch<React.SetStateAction<typeMessage[]>>, pActual: React.RefObject<HTMLParagraphElement>, container: React.RefObject<HTMLDivElement>, divChat: React.RefObject<HTMLDivElement>, divHeader: React.RefObject<HTMLDivElement>, inputRef: React.RefObject<HTMLInputElement>, buttonRef: React.RefObject<HTMLButtonElement>, formRef: React.RefObject<HTMLFormElement>, optionsRef: React.RefObject<HTMLDivElement>, divMessages: React.RefObject<HTMLDivElement>, setOptions: React.Dispatch<React.SetStateAction<typeMessage[]>>, pDivisor: React.RefObject<HTMLParagraphElement>) => {
+export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setMessages: React.Dispatch<React.SetStateAction<typeMessage[]>>, pActual: React.RefObject<HTMLParagraphElement>, container: React.RefObject<HTMLDivElement>, divChat: React.RefObject<HTMLDivElement>, divHeader: React.RefObject<HTMLDivElement>, inputRef: React.RefObject<HTMLInputElement>, buttonRef: React.RefObject<HTMLButtonElement>, formRef: React.RefObject<HTMLFormElement>, optionsRef: React.RefObject<HTMLDivElement>, pDivisor: React.RefObject<HTMLParagraphElement>, generarDialogo: (id: number, finalTime?: number) => Promise<null | undefined>, generarOpciones: (...ids: number[]) => null | undefined) => {
     e.preventDefault()
 
     const form = e.target;
@@ -25,10 +24,9 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
         form.reset();
     }
 
-    const arrayTextos: typeMessage[] = []
-    for (let index = 2; index <= 4; index++) {
-        arrayTextos.push(dialogos.find(dialogo => dialogo.id === index)!)
-    }
+    await generarDialogo(2);
+    await generarDialogo(3);
+    await generarDialogo(4);
 
     const p = pActual.current;
     const cont = container.current;
@@ -41,13 +39,6 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
     const pD = pDivisor.current
 
     if (p && cont && divC && divH && inputForm && buttonForm && formC && options && pD) {
-        for (let i = 0; i < arrayTextos.length; i++) {
-            const texto = arrayTextos[i];
-            setMessages((prev) => [...prev, texto]);
-            await escribirTexto(p, texto.text, { currentDiv: divMessages.current});
-            await waitFor(numeroAlAzar(1000, 2000));                
-        }
-
         if ( window.innerWidth < window.innerHeight) {
             cont.classList.add("py-5");
         } else {
@@ -87,10 +78,7 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
         formC.classList.add("scale-0")
         await waitFor(1000);
 
-        const dialogoId5 = dialogos.find(dialogo => dialogo.id === 5)!;
-        setMessages((prev) => [...prev, dialogoId5]);
-        await escribirTexto(p, dialogoId5.text, {currentDiv: divMessages.current});
-        await waitFor(1000);
+        await generarDialogo(5);
 
         formC.classList.replace("flex", "hidden")
         options.classList.replace("hidden", "flex")
@@ -100,13 +88,9 @@ export const sendFirstMessage = async (e: React.FormEvent<HTMLFormElement>, setM
         pD.classList.add("border", "my-1", "border-red-500")
         await waitFor(1000);
 
-        const dialogoId6 = dialogos.find(dialogo => dialogo.id === 6)!;
-        setMessages((prev) => [...prev, dialogoId6]);
-        await escribirTexto(p, dialogoId6.text, {currentDiv: divMessages.current});
+        await generarDialogo(6);
         await waitFor(1500);
 
-        const dialogoId7 = dialogos.find(dialogo => dialogo.id === 7)!;
-        const dialogoId8 = dialogos.find(dialogo => dialogo.id === 8)!;
-        setOptions([dialogoId7, dialogoId8]);
+        generarOpciones(7, 8);
     }
 }
