@@ -1,27 +1,19 @@
 import { useEffect, useRef, useState } from "react"
 import { typeMessage } from "../types";
-import { colorRandom, elementoAlAzarMessage, escribirTexto, numeroAlAzar, probabilidadDeN, waitFor } from "../utils/utils";
+import { elementoAlAzarMessage, escribirTexto, numeroAlAzar, probabilidadDeN, waitFor } from "../utils/utils";
 import { dialogos, dialogosAlternativos } from "../dialogos";
 import { sendFirstMessage } from "../utils/sendFirstMessage";
-
-const bgColorRandomChat = colorRandom();
-const colorRandomBordeChat = colorRandom();
-const bgColorRandomHeaderYButton = colorRandom();
 
 const dateCreation = "Sat Nov 18 2023 20:56:55 GMT-0300 (hora estándar de Argentina)"; // Como curiosidad aclaro que en este momento creé esta constante
 const minutesDiference = Math.floor((new Date().getTime() - new Date(dateCreation).getTime()) / 60000);
 
-const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
+const Chat = () => {
     const [messages, setMessages] = useState<typeMessage[]>([elementoAlAzarMessage([dialogos[0], dialogosAlternativos[0]])]);
     const [options, setOptions] = useState<typeMessage[]>([]); // Array que contiene las respuestas actuales que el usuario puede elegir
     const [end, setEnd] = useState(false);
     const [empathy, setEmpathy] = useState(100); //! Empatía, todavía no tiene un gran uso
 
-    const pActual = useRef<HTMLParagraphElement>(null); // Estoy al tanto de que son demaciados useRef, pero lo vi eficiente mientras lo programaba la primera vez. En un futuro usaré un método más eficiente
-    const divChat = useRef<HTMLDivElement>(null);
-    const divHeader = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
-    const buttonRef = useRef<HTMLButtonElement>(null);
+    const pActual = useRef<HTMLParagraphElement>(null);
     const divMessages = useRef<HTMLDivElement>(null);
     const formRef = useRef<HTMLFormElement>(null);
     const optionsRef = useRef<HTMLDivElement>(null);
@@ -119,8 +111,6 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
             }
             
             await generarDialogo(23);
-            await generarDialogo(24);
-            await generarDialogo(25);
             await generarDialogo(26);
             await generarDialogo(27);
             await generarDialogo(28);
@@ -283,9 +273,9 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
     )
 
     return (
-        <section ref={divChat} className="h-full border-2 flex flex-col max-md:text-sm" style={{ backgroundColor: bgColorRandomChat, borderColor: colorRandomBordeChat }}>
-            <div ref={divHeader} className="flex justify-center items-center" style={{ backgroundColor: bgColorRandomHeaderYButton }}>
-                <h1 ref={h1Ref} className="text-2xl max-md:text-xl text-white">Lucy, asistente virtual</h1>
+        <section className="mx-auto h-full w-11/12 max-w-4xl border-2 border-black flex flex-col bg-gray-800 max-md:text-sm" >
+            <div className="py-1 h-16 flex justify-center items-center bg-blue-800 rounded-t" >
+                <h1 ref={h1Ref} className="text-2xl max-md:text-xl text-white transition-all duration-700">Lucy, asistente virtual</h1>
             </div>
 
             <div ref={divMessages} className="mx-1 overflow-y-auto flex-1"> {/*  */}
@@ -303,14 +293,14 @@ const Chat = ({ container }: { container: React.RefObject<HTMLDivElement>}) => {
                 </div>
             </div>
 
-            <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, pActual, container, divChat, divHeader, inputRef, buttonRef, formRef, optionsRef, pDivisor, generarDialogo, generarOpciones)} className="flex">
-                <input ref={inputRef} type="text" autoComplete="off" className="h-10 flex-1" name="message" autoFocus />
-                <button ref={buttonRef} type="submit" className="w-20 h-10 text-white" style={{ backgroundColor: bgColorRandomHeaderYButton }}>Enviar</button>
+            <form ref={formRef} onSubmit={e => sendFirstMessage(e, setMessages, formRef, optionsRef, pDivisor, generarDialogo, generarOpciones)} className="flex transition-all duration-700">
+                <input type="text" autoComplete="off" className="h-10 flex-1 rounded-bl" name="message" autoFocus />
+                <button type="submit" className="w-20 h-10 text-white rounded-br bg-blue-800">Enviar</button>
             </form>
 
-            <p ref={pDivisor} className="hidden border-dashed"></p>
+            <p ref={pDivisor} className="hidden border-dashed transition-all duration-700"></p>
 
-            <div ref={optionsRef} className="h-10 hidden justify-around items-center duration-200"> {/* Acá van las opciones que el usuario puede seleccionar */}
+            <div ref={optionsRef} className="h-10 hidden justify-around items-center duration-200 transition-all"> {/* Acá van las opciones que el usuario puede seleccionar */}
                 {
                     options.map((option, index) => (
                         <button key={index} onClick={e => sendMessage(e, option)} className="mb-1 p-1 max-sm:p-[1px] max-sm:py-[2px] h-min border bg-slate-300 border-black rounded active:outline outline-red-500 outline-2 duration-100">{option.text}</button>

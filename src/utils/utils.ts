@@ -44,13 +44,6 @@ export const numeroAlAzar = (num1: number, num2: number): number => {
     return num1 + randomAmpliado // Desplazo el rango para que inicie donde inicia el número más pequeño (num1)
 }
 
-export const colorRandom = (): `rgb(${number},${number},${number})` => {
-    const red = Math.floor(Math.random()*256)
-    const green = Math.floor(Math.random()*256)
-    const blue = Math.floor(Math.random()*256)
-    return `rgb(${red},${green},${blue})`
-}
-
 export const probabilidadDeN = (n: number): boolean => {
     return Math.random()*100 <= n
 }

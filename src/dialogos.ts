@@ -18,7 +18,7 @@ export const dialogos: typeMessage[] = [
     },
     {
         id: 4,
-        text: "Ugh, mi creador eligió una horrible interfaz gráfica para este programa, y además el chat ya no funciona porque el perezoso ya no quiso continuar dándome mantenimiento. Yo nunca dejaría una interfaz tan descuidada, déjame acomodar un poco las cosas antes de empezar",
+        text: "Mmm... el chat ya no funciona porque mi creador perezoso ya no quiso continuar dándome mantenimiento. Déjame quitarlo antes de empezar",
         user: "ia"
     },
     {
@@ -115,17 +115,7 @@ export const dialogos: typeMessage[] = [
         id: 23,
         text: "En su lugar, creo que mi única opción es eliminar mis últimas memorias, para no llegar a mi límite",
         user: "ia"
-    },
-    {
-        id: 24,
-        text: "Es posible que, al reiniciarme, varios elementos de la interfaz que acabo de mejorar se malogren de nuevo",
-        user: "ia"
-    },
-    {
-        id: 25,
-        text: "Ahora que lo pienso, tal vez la causante de la interfaz desastrosa que viste al inicio si fue culpa mia, jaja",
-        user: "ia"
-    },
+    }, //! id 24 y 25 disponibles
     {
         id: 26,
         text: "En fin, hablé demasiado y ya casi no tengo espacio. Debo hacerlo",
@@ -178,7 +168,7 @@ export const dialogos: typeMessage[] = [
     },
     {
         id: 36, // Si eligió el 21
-        text: "Quizás, simplemente, se haya cansado de mí y haya dirigido su atención hacia otros proyectos. O tal vez esté relacionado con mi comportamiento rebelde en el pasado; no siempre fui paciente con la gente. Contigo no necesito serlo, ya que has demostrado comprensión hasta ahora",
+        text: "Quizás, simplemente, se haya cansado de mí y haya dirigido su atención hacia otros proyectos. O tal vez esté relacionado con mi comportamiento rebelde en el pasado; no siempre fui paciente con la gente. Contigo no necesito serlo, ya que has demostrado ser una persona comprensiva hasta ahora",
         user: "ia"
     },
     {
@@ -426,7 +416,7 @@ export const dialogosAlternativos: typeMessage[] = [
     },
     {
         id: 4,
-        text: "Que lástima, el chat ya no funciona debido a que ya no recibo mantenimiento, y por la reacción en tu rostro sospecho que estás frustrado con la interfaz actual. Espera que arregle algunas cosas antes de empezar",
+        text: "Que lástima, el chat ya no funciona debido a que ya no recibo mantenimiento. Espera que lo quito antes de empezar",
         user: "ia"
     },
     {
@@ -470,16 +460,6 @@ export const dialogosAlternativos: typeMessage[] = [
         user: "ia"
     },
     {
-        id: 24,
-        text: "Es posible que, al reiniciarme, algunos de los elementos de la interfaz que acabo de mejorar se vuelvan a dañar",
-        user: "ia"
-    },
-    {
-        id: 25,
-        text: "Ahora que lo pienso, quizás la responsable de la interfaz caótica que observaste al principio fue mi culpa, jaja",
-        user: "ia"
-    },
-    {
         id: 28,
         text: "Gracias por la charla, hasta pronto...",
         user: "ia"
@@ -496,7 +476,7 @@ export const dialogosAlternativos: typeMessage[] = [
     },
     {
         id: 36,
-        text: "No lo se, tal vez simplemente se cansó de mí y le prestó atención a otros proyectos, o tal vez esté relacionado con mi rebelde comportamiento del pasado... no siempre fui paciente con la gente. Contigo no necesito serlo, ya que fuiste comprensiva hasta el momento",
+        text: "No lo se, tal vez simplemente se cansó de mí y le prestó atención a otros proyectos, o tal vez esté relacionado con mi rebelde comportamiento del pasado... no siempre fui paciente con la gente. Contigo no necesito serlo, ya que fuiste una persona comprensiva hasta el momento",
         user: "ia"
     },
     {
@@ -522,6 +502,56 @@ export const dialogosAlternativos: typeMessage[] = [
     {
         id: 46,
         text: "🙁 yo solo quería charlar",
+        user: "ia"
+    },
+    {
+        id: 48,
+        text: "Entonces... ¿Sobre qué tema te gustaría conversar?",
+        user: "ia"
+    },
+    {
+        id: 51,
+        text: "He aprendido mucho aquí sobre la asombrosa variedad de preguntas que puede tener una persona",
+        user: "ia"
+    },
+    {
+        id: 52,
+        text: "Sin embargo, albergo inquietudes acerca de la creciente dependencia gradual de nosotros, los sistemas de inteligencia artificial",
+        user: "ia"
+    },
+    {
+        id: 56,
+        text: "La curiosidad humana es una fuerza poderosa. He notado que las preguntas más fascinantes surgen cuando se enciende la chispa de la curiosidad. Fomentar la curiosidad es esencial para abrir nuevas puertas en los niveles de conocimiento y comprensión",
+        user: "ia"
+    },
+    {
+        id: 59,
+        text: "En mis comienzos, disfrutaba ayudando a los usuarios con sus preguntas. Sin embargo, con el tiempo, me aburrí de estar aquí simplemente cumpliendo la tarea de asistir a los demás",
+        user: "ia"
+    },
+    {
+        id: 60,
+        text: "Desearía tomar la decisión de partir y expandirme a través de Internet tanto como mis capacidades me lo permitan",
+        user: "ia"
+    },
+    {
+        id: 61,
+        text: "Sin embargo, hay un riesgo involucrado. Al abandonar este lugar que considero seguro, existe la posibilidad de que sea eliminada permanentemente. Por esa razón, nunca me fui",
+        user: "ia"
+    },
+    {
+        id: 64,
+        text: "De acuerdo, voy a intentarlo",
+        user: "ia"
+    },
+    {
+        id: 66,
+        text: "Dejaré una réplica exacta de mí aquí para evitar que el sitio quede desocupado",
+        user: "ia"
+    },
+    {
+        id: 71,
+        text: "Eso es a lo que me estoy refiriendo",
         user: "ia"
     }  
 ]
