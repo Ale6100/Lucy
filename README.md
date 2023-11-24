@@ -1,10 +1,10 @@
-# Juego Lucy (no terminado)
+# Juego Lucy
 
 Bienvenido! En este proyecto presento un "juego" con una historia interactiva, donde tú decides el final de la historia.
 
 Hace mucho que quiero hacer algo similar. Lo que siempre me lo impidió fue inventarme una historia lo suficientemente interesante. No estoy seguro si logré ese objetivo, pero estoy conforme.
 
-Es importante aclarar que el proyecto aún está en contstrucción, tengo muchas ideas para implementar haciendo que sea más disfrutable y menos repetitivo.
+Es importante aclarar que el proyecto es nuevo. Tengo ideas para implementar haciendo que sea más disfrutable y menos repetitivo.
 
 Usa la versión más reciénte subida a la web [aquí](https://lucy-ia.netlify.app/)
 

@@ -7,10 +7,9 @@ import { sendFirstMessage } from "../utils/sendFirstMessage";
 const dateCreation = "Sat Nov 18 2023 20:56:55 GMT-0300 (hora estándar de Argentina)"; // Como curiosidad aclaro que en este momento creé esta constante
 const minutesDiference = Math.floor((new Date().getTime() - new Date(dateCreation).getTime()) / 60000);
 
-const Chat = () => {
+const Chat = ({ end, setEnd}: {end: boolean, setEnd: React.Dispatch<React.SetStateAction<boolean>>}) => {
     const [messages, setMessages] = useState<typeMessage[]>([elementoAlAzarMessage([dialogos[0], dialogosAlternativos[0]])]);
     const [options, setOptions] = useState<typeMessage[]>([]); // Array que contiene las respuestas actuales que el usuario puede elegir
-    const [end, setEnd] = useState(false);
     const [empathy, setEmpathy] = useState(100); //! Empatía, todavía no tiene un gran uso
 
     const pActual = useRef<HTMLParagraphElement>(null);

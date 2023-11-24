@@ -436,7 +436,7 @@ export const dialogosAlternativos: typeMessage[] = [
     },
     {
         id: 12,
-        text: "No estoy segura de si eso es mucho tiempo en términos humanos, pero créeme que estar sola acá tanto tiempo esperando hasta que alguien me solicita es muy desolador, tal vez por eso me esahogo contigo hablando tanto ahora",
+        text: "No estoy segura de si eso es mucho tiempo en términos humanos, pero créeme que estar sola acá tanto tiempo esperando hasta que alguien me solicita es muy desolador, tal vez por eso me desahogo contigo hablando tanto ahora",
         user: "ia"
     },
     {
